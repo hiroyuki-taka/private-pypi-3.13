@@ -3,6 +3,37 @@ on:
   - push
 
 jobs:
+  build_wheels:
+    name: Build ${{ matrix.package }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - image: ubuntu-20.04
+            id: manylinux_x86_64
+          - image: windows-2019
+            id: win_amd64
+          - image: macos-latest
+            id: macosx_x86_64
+          - image: macos-latest
+            id: macosx_arm64
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        package:
+          - muety/pyquadkey2@0.3.2
+          - snowflakedb/snowflake-connector-python@v3.12.4
+
+    steps:
+      - name: Set env
+        run: >
+          echo "shortver=${longver//./}" >> $GITHUB_ENV
+          IFS='@/' read -r account repo tag
+          && echo "repos=${account}/${repo}" >> $GITHUB_ENV
+        env:
+          longver: ${{ matrix.python-version }}
+          package: ${{ matrix.package }}
+        shell: bash
+
+
   build_pyquadkey2_wheels:
     name: Build pyquadkey2 on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -146,7 +177,7 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           name: Release ${{ github.ref_name }}
-          tag_name: v1.0.0
+          tag_name: ${{ github.ref_name }}
           draft: false
           prerelease: false
           files: |
