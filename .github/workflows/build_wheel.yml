@@ -176,7 +176,7 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           name: Release ${{ github.ref_name }}
-          tag_name: ${{ github.ref_name }}
+          tag_name: ${{ github.sha }}
           draft: false
           prerelease: false
           files: |
@@ -214,7 +214,7 @@ jobs:
           done
           cat package-list.json
           pipx run dumb-pypi --package-list-json package-list.json \
-            --packages-url $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ github.ref_name }}/ \
+            --packages-url $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ github.sha }}/ \
             --output-dir data
       - uses: actions/upload-pages-artifact@v3
         with:
