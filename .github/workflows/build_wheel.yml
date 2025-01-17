@@ -131,7 +131,11 @@ jobs:
       - build_pyquadkey2_wheels
       - build_pyquadkey2_sdist
       - build_snowflake_connector_python_wheels
+      - build_snowflake_connector_python_sdist
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/download-artifact@v4
@@ -148,3 +152,42 @@ jobs:
           files: |
             dist/*.whl
             dist/*.tar.gz
+
+  create_pages:
+    name: Create dumb-pypi
+    needs:
+      - build_pyquadkey2_wheels
+      - build_pyquadkey2_sdist
+      - build_snowflake_connector_python_wheels
+      - build_snowflake_connector_python_sdist
+    runs-on: ubuntu-latest
+
+    environment:
+      name: dumb-pypi
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    permissions:
+      pages: write
+      id-token: write
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: create PyPI index
+        run: |
+          for file in dist/*; do
+            echo -e "{\"filename\": \"$(basename $file)\", \"hash\": \"sha256=$(sha256sum $file | awk '{print $1}')\"}" >> package-list.json
+          done
+          cat package-list.json
+          pipx run dumb-pypi --package-list-json package-list.json \
+            --packages-url $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ github.ref_name }}/ \
+            --output-dir data
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: data
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
