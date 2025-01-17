@@ -4,7 +4,7 @@ on:
 
 jobs:
   build_wheels:
-    name: Build ${{ matrix.package }} on ${{ matrix.os }}
+    name: Build ${{ matrix.package }} on ${{ matrix.os }} test
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -26,13 +26,14 @@ jobs:
       - name: Set env
         run: >
           echo "shortver=${longver//./}" >> $GITHUB_ENV
-          IFS='@/' read -r account repo tag
-          && echo "repos=${account}/${repo}" >> $GITHUB_ENV
+          && IFS='@/' read -r username repository tag
+          && echo "USERNAME=${account}" >> $GITHUB_ENV
+          && echo "REPOSITORY=${repository}" >> $GITHUB_ENV
+          && echo "TAG=${tag}" >> $GITHUB_ENV
         env:
           longver: ${{ matrix.python-version }}
           package: ${{ matrix.package }}
         shell: bash
-
 
   build_pyquadkey2_wheels:
     name: Build pyquadkey2 on ${{ matrix.os }}
@@ -191,6 +192,7 @@ jobs:
       - build_pyquadkey2_sdist
       - build_snowflake_connector_python_wheels
       - build_snowflake_connector_python_sdist
+      - build_wheels
     runs-on: ubuntu-latest
 
     environment:
