@@ -87,7 +87,7 @@ jobs:
           repository: snowflakedb/snowflake-connector-python
           ref: "v3.12.4"
       - name: Building wheel
-        uses: pypa/cibuildwheel@v2.16.5
+        uses: pypa/cibuildwheel@v2.22.0
         env:
           CIBW_BUILD: cp${{ env.shortver }}-${{ matrix.os.id }}
           MACOSX_DEPLOYMENT_TARGET: 10.14  # Should be kept in sync with ci/build_darwin.sh
