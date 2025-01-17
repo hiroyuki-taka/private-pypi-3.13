@@ -102,8 +102,31 @@ jobs:
           name: snowflake-connector-python-wheels-${{ matrix.os.id }}_py${{ matrix.python-version }}
           path: dist/
 
+  build_snowflake_connector_python_sdist:
+    name: Build snowflake-connector-python sdist
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: snowflakedb/snowflake-connector-python
+          ref: "v3.12.4"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install build
+
+      - name: Build sdist
+        run: |
+          python -m build --sdist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: snowflake-connector-python-sdist
+          path: ./dist/*.tar.gz
+
   create_release:
-    name: Build
+    name: Create release page
     needs:
       - build_pyquadkey2_wheels
       - build_pyquadkey2_sdist
@@ -119,7 +142,7 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           name: Release ${{ github.ref_name }}
-          tag_name: ${{ github.ref_name }}
+          tag_name: v1.0.0
           draft: false
           prerelease: false
           files: |
