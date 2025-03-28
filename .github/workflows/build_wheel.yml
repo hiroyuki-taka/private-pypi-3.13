@@ -61,7 +61,7 @@ jobs:
           path: ./dist/*.tar.gz
 
   build_snowflake_connector_python_wheels:
-    name: Build ${{ matrix.os.id }}-py${{ matrix.python-version }}
+    name: Build snowflake-${{ matrix.os.id }}-py${{ matrix.python-version }}
     runs-on: ${{ matrix.os.image }}
     strategy:
       matrix:
@@ -75,7 +75,6 @@ jobs:
           - image: macos-latest
             id: macosx_arm64
         python-version: ["3.10", "3.11", "3.12", "3.13"]
-
     steps:
       - name: Set shortver
         run: echo "shortver=${longver//./}" >> $GITHUB_ENV
@@ -125,6 +124,49 @@ jobs:
           name: snowflake-connector-python-sdist
           path: ./dist/*.tar.gz
 
+  build_black_wheels:
+    name: Build black-${{ matrix.os.id }}-py${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - image: ubuntu-20.04
+            id: manylinux_x86_64
+          - image: windows-2019
+            id: win_amd64
+          - image: macos-latest
+            id: macosx_x86_64
+          - image: macos-latest
+            id: macosx_arm64
+        python-version: ["3.10", "3.12", "3.13"]
+        version:
+          - "23.12.1"
+    steps:
+      - name: Set shortver
+        run: echo "shortver=${longver//./}" >> $GITHUB_ENV
+        env:
+          longver: ${{ matrix.python-version }}
+        shell: bash
+      - uses: actions/checkout@v4
+        with:
+          repository: psf/black
+          ref: ${{ matrix.version }}
+      - name: Building wheel
+        uses: pypa/cibuildwheel@v2.22.0
+        env:
+          CIBW_BUILD: cp${{ env.shortver }}-${{ matrix.os.id }}
+          MACOSX_DEPLOYMENT_TARGET: 10.14  # Should be kept in sync with ci/build_darwin.sh
+        with:
+          output-dir: dist
+      - name: Show wheels generated
+        run: ls -lh dist
+        shell: bash
+      - uses: actions/upload-artifact@v4
+        with:
+          include-hidden-files: true
+          name: black-wheels-${{ matrix.os.id }}_py${{ matrix.python-version }}
+          path: dist/
+
   create_release:
     name: Create release page
     needs:
@@ -132,6 +174,7 @@ jobs:
       - build_pyquadkey2_sdist
       - build_snowflake_connector_python_wheels
       - build_snowflake_connector_python_sdist
+      - build_black_wheels
     runs-on: ubuntu-latest
 
     permissions:
@@ -160,6 +203,7 @@ jobs:
       - build_pyquadkey2_sdist
       - build_snowflake_connector_python_wheels
       - build_snowflake_connector_python_sdist
+      - build_black_wheels
     runs-on: ubuntu-latest
 
     environment:
