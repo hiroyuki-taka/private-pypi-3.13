@@ -126,7 +126,7 @@ jobs:
 
   build_black_wheels:
     name: Build black-${{ matrix.os.id }}-py${{ matrix.python-version }}
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os.image }}
     strategy:
       matrix:
         os:
