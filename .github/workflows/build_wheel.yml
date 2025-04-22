@@ -153,11 +153,11 @@ jobs:
         shell: bash
       - uses: actions/checkout@v4
         with:
-          path: patcher
-      - uses: actions/checkout@v4
-        with:
           repository: psf/black
           ref: ${{ matrix.version }}
+      - uses: actions/checkout@v4
+        with:
+          path: patcher
       - name: patch
         run: patch -i patcher/black-23.12.1.patch -p1
         shell: bash
