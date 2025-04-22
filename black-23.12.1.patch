@@ -1,31 +1,8 @@
-Subject: [PATCH] .
----
-Index: src/blib2to3/pgen2/pgen.py
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
-diff --git a/src/blib2to3/pgen2/pgen.py b/src/blib2to3/pgen2/pgen.py
---- a/src/blib2to3/pgen2/pgen.py	(revision ec91a2be3c44d88e1a3960a4937ad6ed3b63464e)
-+++ b/src/blib2to3/pgen2/pgen.py	(date 1745327958052)
-@@ -367,7 +367,7 @@
-                 msg = msg % args
-             except Exception:
-                 msg = " ".join([msg] + list(map(str, args)))
--        raise SyntaxError(msg, (self.filename, self.end[0], self.end[1], self.line))
-+        raise SyntaxError(msg, (str(self.filename), self.end[0], self.end[1], self.line))
- 
- 
- class NFAState:
-Index: pyproject.toml
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
 diff --git a/pyproject.toml b/pyproject.toml
---- a/pyproject.toml	(revision ec91a2be3c44d88e1a3960a4937ad6ed3b63464e)
-+++ b/pyproject.toml	(date 1745328856679)
-@@ -121,8 +121,8 @@
+index 24b9c07..f2a2148 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -121,8 +121,8 @@ macos-max-compat = true
  enable-by-default = false
  dependencies = [
    "hatch-mypyc>=0.16.0",
@@ -36,7 +13,7 @@ diff --git a/pyproject.toml b/pyproject.toml
  ]
  require-runtime-dependencies = true
  exclude = [
-@@ -170,6 +170,7 @@
+@@ -170,6 +170,7 @@ MYPYC_DEBUG_LEVEL = "0"
  AIOHTTP_NO_EXTENSIONS = "1"
  
  [tool.cibuildwheel.linux]
@@ -44,7 +21,7 @@ diff --git a/pyproject.toml b/pyproject.toml
  before-build = [
      "yum install -y clang gcc",
  ]
-@@ -187,7 +188,7 @@
+@@ -187,7 +188,7 @@ CC = "clang"
  build-frontend = { name = "build", args = ["--no-isolation"] }
  # Unfortunately, hatch doesn't respect MACOSX_DEPLOYMENT_TARGET
  before-build = [
@@ -53,3 +30,16 @@ diff --git a/pyproject.toml b/pyproject.toml
      """sed -i '' -e "600,700s/'10_16'/os.environ['MACOSX_DEPLOYMENT_TARGET'].replace('.', '_')/" $(python -c 'import hatchling.builders.wheel as h; print(h.__file__)') """,
  ]
  
+diff --git a/src/blib2to3/pgen2/pgen.py b/src/blib2to3/pgen2/pgen.py
+index 3ece9bb..82b34ec 100644
+--- a/src/blib2to3/pgen2/pgen.py
++++ b/src/blib2to3/pgen2/pgen.py
+@@ -367,7 +367,7 @@ class ParserGenerator:
+                 msg = msg % args
+             except Exception:
+                 msg = " ".join([msg] + list(map(str, args)))
+-        raise SyntaxError(msg, (self.filename, self.end[0], self.end[1], self.line))
++        raise SyntaxError(msg, (str(self.filename), self.end[0], self.end[1], self.line))
+ 
+ 
+ class NFAState:

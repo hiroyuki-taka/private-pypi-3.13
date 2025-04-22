@@ -138,8 +138,8 @@ jobs:
             id: manylinux_x86_64
           - image: windows-2019
             id: win_amd64
-          - image: macos-latest
-            id: macosx_x86_64
+#          - image: macos-latest
+#            id: macosx_x86_64
           - image: macos-latest
             id: macosx_arm64
         python-version: ["3.12", "3.13"]
@@ -157,8 +157,8 @@ jobs:
           repository: psf/black
           ref: ${{ matrix.version }}
           path: black
-      - name: change dir
-        run: ls -la; patch -d black -i ../black-23.12.1.patch
+      - name: patch
+        run: patch -d black -i ../black-23.12.1.patch -p1
         shell: bash
       - name: Building wheel
         uses: pypa/cibuildwheel@v2.23.2
