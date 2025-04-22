@@ -158,7 +158,7 @@ jobs:
           ref: ${{ matrix.version }}
           path: black
       - name: change dir
-        run: ls -la; patch -d black -i black-23.12.1.patch
+        run: ls -la; patch -d black -i ../black-23.12.1.patch
         shell: bash
       - name: Building wheel
         uses: pypa/cibuildwheel@v2.23.2
