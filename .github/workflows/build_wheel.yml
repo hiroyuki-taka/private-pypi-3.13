@@ -3,6 +3,7 @@ on:
   - push
 
 jobs:
+  # pyquadkey2(whl)
   build_pyquadkey2_wheels:
     name: Build pyquadkey2 on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -13,7 +14,6 @@ jobs:
           - windows-latest
           - macos-13
           - macos-latest
-
     steps:
       - uses: actions/checkout@v4
         with:
@@ -36,6 +36,7 @@ jobs:
           name: pyquadkey2-wheels-${{ matrix.os }}
           path: ./wheelhouse/*.whl
 
+  # pyquadkey2(sdist)
   build_pyquadkey2_sdist:
     name: Build pyquadkey2 sdist
     runs-on: ubuntu-latest
@@ -60,6 +61,7 @@ jobs:
           name: pyquadkey2-sdist
           path: ./dist/*.tar.gz
 
+  # snowflake-connector-python(whl)
   build_snowflake_connector_python_wheels:
     name: Build snowflake-${{ matrix.os.id }}-py${{ matrix.python-version }}
     runs-on: ${{ matrix.os.image }}
@@ -74,7 +76,7 @@ jobs:
             id: macosx_x86_64
           - image: macos-latest
             id: macosx_arm64
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.12", "3.13"]
     steps:
       - name: Set shortver
         run: echo "shortver=${longver//./}" >> $GITHUB_ENV
@@ -101,6 +103,7 @@ jobs:
           name: snowflake-connector-python-wheels-${{ matrix.os.id }}_py${{ matrix.python-version }}
           path: dist/
 
+  # snowflake-connector-python(sdist)
   build_snowflake_connector_python_sdist:
     name: Build snowflake-connector-python sdist
     runs-on: ubuntu-latest
@@ -124,6 +127,7 @@ jobs:
           name: snowflake-connector-python-sdist
           path: ./dist/*.tar.gz
 
+  # black(whl)
   build_black_wheels:
     name: Build black-${{ matrix.os.id }}-py${{ matrix.python-version }}
     runs-on: ${{ matrix.os.image }}
@@ -138,7 +142,7 @@ jobs:
             id: macosx_x86_64
           - image: macos-latest
             id: macosx_arm64
-        python-version: ["3.10", "3.12", "3.13"]
+        python-version: ["3.12", "3.13"]
         version:
           - "23.12.1"
     steps:
@@ -151,8 +155,11 @@ jobs:
         with:
           repository: psf/black
           ref: ${{ matrix.version }}
+      - name: file list
+        run: ls -la
+        shell: bash
       - name: Building wheel
-        uses: pypa/cibuildwheel@v2.22.0
+        uses: pypa/cibuildwheel@v2.23.2
         env:
           CIBW_BUILD: cp${{ env.shortver }}-${{ matrix.os.id }}
           MACOSX_DEPLOYMENT_TARGET: 10.14  # Should be kept in sync with ci/build_darwin.sh
