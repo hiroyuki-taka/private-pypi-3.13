@@ -152,13 +152,14 @@ jobs:
           longver: ${{ matrix.python-version }}
         shell: bash
       - uses: actions/checkout@v4
+        with:
+          path: patcher
       - uses: actions/checkout@v4
         with:
           repository: psf/black
           ref: ${{ matrix.version }}
-          path: black
       - name: patch
-        run: patch -d black -i ../black-23.12.1.patch -p1
+        run: patch -i patcher/black-23.12.1.patch -p1
         shell: bash
       - name: Building wheel
         uses: pypa/cibuildwheel@v2.23.2
@@ -167,7 +168,6 @@ jobs:
           MACOSX_DEPLOYMENT_TARGET: 10.14  # Should be kept in sync with ci/build_darwin.sh
         with:
           output-dir: dist
-          package-dir: black
       - name: Show wheels generated
         run: ls -lh dist
         shell: bash
