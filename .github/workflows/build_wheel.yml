@@ -155,8 +155,9 @@ jobs:
         with:
           repository: psf/black
           ref: ${{ matrix.version }}
+          path: black
       - name: file list
-        run: ls -la
+        run: pwd; ls -la; ls -la black;
         shell: bash
       - name: Building wheel
         uses: pypa/cibuildwheel@v2.23.2
