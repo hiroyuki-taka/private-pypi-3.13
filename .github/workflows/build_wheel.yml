@@ -152,12 +152,13 @@ jobs:
           longver: ${{ matrix.python-version }}
         shell: bash
       - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           repository: psf/black
           ref: ${{ matrix.version }}
           path: black
-      - name: file list
-        run: pwd; ls -la; ls -la black;
+      - name: change dir
+        run: ls -la; cd black
         shell: bash
       - name: Building wheel
         uses: pypa/cibuildwheel@v2.23.2
