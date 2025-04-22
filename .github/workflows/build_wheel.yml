@@ -68,7 +68,7 @@ jobs:
     strategy:
       matrix:
         os:
-          - image: ubuntu-20.04
+          - image: ubuntu-latest
             id: manylinux_x86_64
           - image: windows-2019
             id: win_amd64
@@ -134,7 +134,7 @@ jobs:
     strategy:
       matrix:
         os:
-          - image: ubuntu-20.04
+          - image: ubuntu-latest
             id: manylinux_x86_64
           - image: windows-2019
             id: win_amd64
