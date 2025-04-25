@@ -1,8 +1,18 @@
 diff --git a/pyproject.toml b/pyproject.toml
-index 24b9c07..f2a2148 100644
+index 24b9c07..90ff91a 100644
 --- a/pyproject.toml
 +++ b/pyproject.toml
-@@ -121,8 +121,8 @@ macos-max-compat = true
+@@ -102,6 +102,9 @@ fragments = [
+ [tool.hatch.version]
+ source = "vcs"
+ 
++[tool.hatch.version.raw-options]
++local_scheme = "no-local-version"
++
+ [tool.hatch.build.hooks.vcs]
+ version-file = "src/_black_version.py"
+ template = '''
+@@ -121,8 +124,8 @@ macos-max-compat = true
  enable-by-default = false
  dependencies = [
    "hatch-mypyc>=0.16.0",
@@ -13,7 +23,7 @@ index 24b9c07..f2a2148 100644
  ]
  require-runtime-dependencies = true
  exclude = [
-@@ -170,6 +170,7 @@ MYPYC_DEBUG_LEVEL = "0"
+@@ -170,6 +173,7 @@ MYPYC_DEBUG_LEVEL = "0"
  AIOHTTP_NO_EXTENSIONS = "1"
  
  [tool.cibuildwheel.linux]
@@ -21,7 +31,7 @@ index 24b9c07..f2a2148 100644
  before-build = [
      "yum install -y clang gcc",
  ]
-@@ -187,7 +188,7 @@ CC = "clang"
+@@ -187,7 +191,7 @@ CC = "clang"
  build-frontend = { name = "build", args = ["--no-isolation"] }
  # Unfortunately, hatch doesn't respect MACOSX_DEPLOYMENT_TARGET
  before-build = [
