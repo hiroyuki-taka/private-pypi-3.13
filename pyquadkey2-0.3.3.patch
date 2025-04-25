@@ -1,0 +1,21 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 5012efb..32c314a 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -1,5 +1,5 @@
+ [build-system]
+-requires = ["hatchling"]
++requires = ["hatchling", "hatch-vcs"]
+ build-backend = "hatchling.build"
+ 
+ [project]
+@@ -51,6 +51,8 @@ options = { compile_py = false }
+ [tool.hatch.version]
+ source = "vcs"
+ 
++[tool.hatch.version.raw-options]
++local_scheme = "no-local-version"
++
+ [tool.hatch.build.hooks.vcs]
+-dependencies = ["hatch-vcs"]
+ version-file = "src/pyquadkey2/_version.py"

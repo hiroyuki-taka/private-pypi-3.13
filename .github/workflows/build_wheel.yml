@@ -54,9 +54,15 @@ jobs:
         with:
           repository: muety/pyquadkey2
           ref: ${{ matrix.version }}
+      - uses: actions/checkout@v4
+        with:
+          path: patcher
+      - name: patch
+        run: patch -i patcher/pyquadkey2-${{ matrix.version }}.patch -p1
+        shell: bash
       - name: Build wheels
         env:
-          CIBW_BUILD: cp313-* cp312-* cp311-* cp310-*
+          CIBW_BUILD: cp313-* cp312-* cp310-*
           CIBW_SKIP: pp* *-win32 *_i686
         run: |
           pipx run cibuildwheel==2.23.2
