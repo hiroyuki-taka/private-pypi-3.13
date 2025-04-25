@@ -63,7 +63,7 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
-          name: pyquadkey2-${{ matix.version }}-wheels-${{ matrix.os }}
+          name: pyquadkey2-${{ matrix.version }}-wheels-${{ matrix.os }}
           path: ./wheelhouse/*.whl
 
   # pyquadkey2(sdist)
